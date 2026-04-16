@@ -15,9 +15,9 @@
 ### 1.2 目前學習狀態
 | 項目 | 狀態 | 備註 |
 | --- | --- | --- |
-| 核心概念 | 未開始 | |
-| 常用服務 | 未開始 | |
-| 實作案例 | 未開始 | |
+| 核心概念 | 學習中 | 已完成 S3 第一版整理 |
+| 常用服務 | 學習中 | S3 已整理，其他待補 |
+| 實作案例 | 學習中 | 已新增靜態網站部署案例 |
 | 維運與監控 | 未開始 | |
 | 成本管理 | 未開始 | |
 
@@ -110,29 +110,33 @@
 - 不適合場景：需要傳統檔案系統即時掛載的情境
 
 **核心概念**
-- Bucket：
-- Object：
-- Storage Class：
-- Bucket Policy：
-- Lifecycle：
+- Bucket：S3 的容器，名稱需全域唯一，且建議依環境拆分（dev/staging/prod）
+- Object：實際檔案本體，包含 Key、Metadata、Version
+- Storage Class：依存取頻率選擇（Standard、Standard-IA、Glacier 等）
+- Bucket Policy：以資源為中心的權限控管，常搭配 IAM policy 使用
+- Lifecycle：自動搬移或刪除舊資料，常用於備份與封存降本
 
 **常見操作**
-- 建立 Bucket：
-- 上傳檔案：
-- 啟用靜態網站託管：
-- 設定公開/私有權限：
+- 建立 Bucket：選擇就近 Region，關閉不必要公開存取
+- 上傳檔案：確認 MIME type 正確（例如 text/css、application/javascript）
+- 啟用靜態網站託管：設定 Index document（index.html）與 Error document（error.html）
+- 設定公開/私有權限：優先走 CloudFront + OAC，不建議直接 Public Bucket
 
 **限制與注意事項**
 - Bucket 名稱需全域唯一
 - 權限設定錯誤容易造成資料外洩
+- S3 具最終一致性考量的歷史脈絡，設計上仍應避免強依賴即時覆寫可見性
+- 不適合作為一般 Linux 檔案系統掛載替代品（該需求更接近 EFS）
 
 **成本觀察**
-- 儲存容量費用：
-- 請求次數費用：
-- 資料傳輸費用：
+- 儲存容量費用：按 GB/月計價，不同 Storage Class 價格差異大
+- 請求次數費用：GET、PUT、LIST 都會影響成本，高頻小檔案要特別留意
+- 資料傳輸費用：跨區與對外傳輸可能是主要成本來源之一
 
 **實務筆記**
-- 
+- 若要公開網站，優先用 CloudFront 當入口，S3 維持私有並用 OAC 授權
+- 建議預設開啟 Versioning，避免誤刪或誤覆蓋檔案難以回復
+- 可先用 Standard，觀察 2-4 週後再加 Lifecycle 降到 IA/Glacier
 
 #### EBS
 **服務定位**
@@ -351,6 +355,49 @@
 - 可用服務：S3、CloudFront、Route 53、ACM
 - 想理解的重點：公開存取、CDN、HTTPS、網域綁定
 
+### 3.3 實作案例：S3 + CloudFront 靜態網站部署
+
+**目標**
+- 建立可用 HTTPS 存取的靜態網站
+- 讓 S3 保持私有，透過 CloudFront 提供對外流量
+
+**使用服務**
+- S3
+- CloudFront
+- Route 53（選配，若要自訂網域）
+- ACM（選配，若要 HTTPS 憑證）
+
+**架構說明**
+- 使用者請求如何進來：User -> CloudFront -> S3
+- 資料如何流動：CloudFront 快取靜態檔案，未命中時回源到 S3
+- 哪些元件負責安全與監控：CloudFront + OAC 控制存取，CloudWatch 監看錯誤率
+
+**實作步驟**
+1. 建立 S3 Bucket，保持 Block Public Access 開啟，上傳 index.html 與靜態資源。
+2. 建立 CloudFront Distribution，Origin 指向 S3，並建立 OAC。
+3. 更新 S3 Bucket Policy，只允許指定 CloudFront Distribution 存取物件。
+4. 在 CloudFront 設定 Default Root Object 為 index.html。
+5. 若有自訂網域：在 ACM 申請憑證並綁定 CloudFront，Route 53 建立 A/AAAA Alias。
+6. 部署後執行失效（Invalidation），確保使用者看到最新內容。
+
+**驗證方式**
+- 使用 CloudFront 網域可正常開啟首頁與子頁面
+- 確認 S3 物件 URL 直接存取會被拒絕（AccessDenied）
+- 使用瀏覽器 DevTools 檢查快取命中與回應標頭
+
+**問題與排查**
+- 問題：刷新子路由出現 403/404
+- 原因：S3 靜態網站與 SPA 路由設定不一致
+- 解法：CloudFront 自訂 Error Response 導回 /index.html
+
+**成本觀察**
+- 小流量情境通常成本低，主要來自 CloudFront 請求與對外傳輸
+- 若圖片很多，先壓縮與長快取可有效降低流量費
+
+**可重用結論**
+- 靜態內容優先選 S3 + CloudFront，安全性與效能兼顧
+- 先求可用，再做快取策略與版本管理優化
+
 #### 動態網站後端
 - 可用服務：EC2、RDS、ALB、Auto Scaling、CloudWatch
 - 想理解的重點：高可用、擴展性、資料庫連線、安全群組
@@ -398,10 +445,13 @@
 ## 5. 複習與追蹤區
 
 ### 5.1 本週新增
-- 
+- 完成 S3 服務第一版筆記（定位、概念、操作、成本、踩坑）
+- 新增「S3 + CloudFront 靜態網站部署」實作案例
 
 ### 5.2 待補強主題
-- 
+- CloudFront 快取策略與 Invalidation 成本平衡
+- Route 53 路由政策（Simple、Weighted、Latency）
+- IAM policy 最小權限實作範例
 
 ### 5.3 常考或常用重點
 - IAM 的 Role 與 Policy 差異
@@ -416,7 +466,7 @@
 | 主題 | 是否已整理 | 備註 |
 | --- | --- | --- |
 | EC2 | 否 | |
-| S3 | 否 | |
+| S3 | 是 | 已完成第一版 |
 | IAM | 否 | |
 | VPC | 否 | |
 | RDS | 否 | |
