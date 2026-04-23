@@ -1,6 +1,6 @@
 # 2026/04 學習筆記
 
-> 用來記錄每日學習的內容
+> 用來記錄每日學習的內容，先瞭解基礎，每週末回頭 review 做延伸補充
 
 ## 4/22
 
@@ -48,3 +48,56 @@
 - 非對稱加密
 
 
+## 4/23
+
+> [aws_learnig.md](https://github.com/chickundersea/GClearnignotes/blob/main/aws_learnig.md) 同步更新
+
+### 依賴注入 (Dependency Injection, DI)
+TBC
+
+ref:<br>
+[消除你程式碼的臭味 Day 20- 依賴注入：鬆開那個耦合](https://ithelp.ithome.com.tw/m/articles/10385298)
+
+
+### OLTP/OLAP
+TBC
+
+###  Amazon DynamoDB GSI (全域次要索引)
+- **功能**：GSI 允許使用與基礎資料表（Base Table）不同的分割鍵（Partition Key）和排序鍵（Sort Key）來查詢資料。
+- **特點**：GSI 中的資料是從基礎資料表異步複製過來的。它可以包含基礎資料表中所有屬性或部分屬性（投影），並提供高度靈活的查詢能力。
+- **效能與限流**：GSI 有自己的讀寫容量單位（RCU/WCU）。如果 GSI 的寫入容量不足，會導致基礎資料表的寫入操作遭遇背壓（Throttling）限流。
+
+### 基礎架構即程式碼 (IaC)
+>what / how
+#### Why  
+```md
+- 文件維護不易
+傳統配置基礎架構幾乎都是透過原廠提供的 Client 工具
+隨著工具及硬體升級
+往往介面操作不太一樣
+造成文件無法對齊現有操作
+
+- 版本控管
+以管理域名為例
+添加 A Record 及 CName Record 都是簡單操作就完成
+但透過介面的操作
+無法回朔前一個操作
+使用 IaC 配置基礎架構
+程式碼進入版控以後
+很容易可以查找過去修改歷程
+
+- 學習多套工具
+IT 單位從虛擬機械到網域管理
+如果每個導入的系統都要學習
+則需要熟悉多套工具或熟悉多套軟體的 GUI 操作
+使用支援廣泛的 IaC 工具
+則可以使用一套工具
+應用於其他地方
+```
+
+
+#### 英單
+```txt
+- Aggregation:
+- 
+```
