@@ -94,10 +94,40 @@ IT 單位從虛擬機械到網域管理
 則可以使用一套工具
 應用於其他地方
 ```
+**情境題**
+#### A account 裡的 X user 可以直接存取 B account 裡 S3 服務的 Y 資源嗎？ 在 S3 已經有 allow X user 且 X user allow put y 的情況下 ?
+
+A: 可以！因為是建立在雙方都 Allow 的前提下
+```txt
+帳號 A (來源端)： 使用者 X 的 IAM Policy 必須允許存取帳號 B 的資源 Y。
+
+帳號 B (資源端)： 資源 Y 的 S3 Bucket Policy 必須允許帳號 A 的使用者 X 進行存取。
+```
+S3 之所以能「直接存取」，不需要透過 Role  是因為 S3 支援「資源型策略（Resource-based Policy）」。
+
+而不同 account 之間，是有預設 Implicit Deny （隱含拒絕），如果 A 帳號沒給 permission user 就無法跨出門，B 帳號沒有開存取權們也是鎖死的，而只要任何一端設定 Deny 或是沒有說 Allow ， 這個請求就會直接失效。
+
+這邊說的「門」 指的是由 AWS Policy Evaluation Engine (權限評估引擎) 在每一次 API 呼叫時，即時運算出來的邏輯牆。
+<br>
+
+
+
+
+case:<br>
+[Example 2: Bucket owner granting cross-account bucket permissions](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-walkthroughs-managing-access-example2.html)
+<br>
+ref:<br>
+[IAM 中的跨帳戶資源存取](https://docs.aws.amazon.com/zh_tw/IAM/latest/UserGuide/access_policies-cross-account-resource-access.html)
+
 
 
 #### 英單
 ```txt
 - Aggregation:
-- 
+- feasibility: 可行性
 ```
+
+
+## 4/24
+
+
