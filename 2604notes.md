@@ -121,13 +121,120 @@ ref:<br>
 
 
 
-#### 英單
+### 英單
 ```txt
-- Aggregation:
+- Aggregation:聚合
 - feasibility: 可行性
 ```
 
 
 ## 4/24
+
+
+
+
+### What is 「arn」?
+ARN = Amazon Resource Name
+ >A unique identifier for components like Lambda functions, EC2 instances, or IAM roles, typically in the format 
+ `arn:partition:service:region:account-id:resource`
+ ex: `arn:aws:ec2:us-east-1:123456789012:instance/i-1234567890abcdef0`
+
+
+
+### Take a look in `gc-host` / `role.tf`
+```hcl
+  custom_role = {
+    developer = {
+      policy_arns = [
+        module.iam_policy.tf_states_management_arn,
+        data.aws_iam_policy.cloudwatch_readonly.arn,
+        aws_iam_policy.eks_developer.arn,
+      ]
+    }
+    regionalAdmin = {
+      policy_arns = [
+        module.iam_policy.regional_admin_arn
+      ]
+    }
+
+    readonly = {
+      policy_arns = [
+        data.aws_iam_policy.readonly.arn
+      ]
+    }
+  }
+```
+可以看到，gc-host 底下有的role 為 `developer`,`regionalAdmin`, `readonly`
+<br>
+`policy_arns` 代表要附加的IAM policy 清單 用陣列[]條列
+
+```
+module.iam_policy.tf_states_management_arn,
+```
+- `module` : 引用另一個 Terraform 模組設定
+- `iam_policy`:模組名稱
+- `tf_states_management_arn`:模組的value > 管理terraform state 的 policy ARN
+
+這裡的 module 引用了 `module "iam_policy"` 呼叫`"../../modules/policy"`傳入設定 (透過`source `)
+```
+module "iam_policy" {
+  source = "../../modules/policy"
+
+  regional_admin = {
+    enabled = true
+    region  = "ap-northeast-1"
+  }
+    tf_states_management = {
+    enabled    = true
+    bucket_arn = module.backend.bucket_arn
+    table_arn  = module.backend.table_arn
+  }
+}
+```
+接著看到 `modules/policy` 資料夾，由`output.tf`把 ARN 輸出
+```
+├── modules/
+│   └── policy/
+│       ├── outputs.tf                      # 定義 Module 輸出結果（ARN 給外層使用）
+│       ├── variables.tf                    # 定義 Module 輸入變數（enabled、region 等參數）
+│       ├── policy-regional-admin.tf        # 定義 區域管理員 IAM Policy 資源
+│       ├── policy-secret-management.tf     # 定義 Secret 管理 IAM Policy 資源
+│       ├── policy-tf-state-management.tf   # 定義 Terraform State（S3+DynamoDB）IAM Policy 資源
+│       ├── providers.tf                    # 定義 AWS Provider 設定（region、assume role 等）
+│       └── README.md
+
+```
+- 為什麼每個policy可以直接讀取？
+Ａ：Terraform 的機制讓同資料夾內的`.tf`檔自動被解析並整合在一起。執行得時候就會一起被讀取，不需要 import 或 require ，因此可透過命名將不同資源分開以方便維護。
+
+##### 資料流
+```
+variable.tf          定義輸入參數的型別與預設值
+     ↓
+policy-regional-admin.tf   接收 var.xxx，建立 aws_iam_policy 資源
+     ↓
+output.tf            讀取建立好的資源的 .arn，輸出給外層
+     ↓
+外層 module.iam_policy.regional_admin_arn
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 英單
+```txt
+- compilance:合規
+- 
+```
 
 
