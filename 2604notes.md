@@ -2,6 +2,15 @@
 
 > 用來記錄每日學習的內容，先瞭解基礎，每週末回頭 review 做延伸補充
 
+## 目錄
+
+- [4/22](#422) — SIT / UAT / Smoke Testing / SSE / useMemo / 密碼學
+- [4/23](#423) — 依賴注入 / OLTP OLAP / DynamoDB GSI / IaC / 跨帳號 S3 存取
+- [4/24](#424) — ARN / Terraform IAM Policy Module 解析
+- [4/27](#427) - 
+
+---
+
 ## 4/22
 
 ### SIT (System Integration Testing) - 系統整合測試
@@ -17,6 +26,16 @@
 
 ### Smoke Testing 冒煙測試
 是軟體開發中的一種快速驗證流程，旨在軟體新版本發布或程式碼變更後，優先確認「核心功能」是否正常運行。若最基礎的功能（如啟動程式、登入）失敗，則不需進行後續細緻測試，節省時間成本，常用於自動化測試
+>可以理解一下其在 SDLC Software Development Life Cycle 和 DevOps 之間的關係
+
+
+
+Functional Test（功能性測試）
+Integration Test（整合性測試）
+System Test（系統測試）
+Regression Test（回歸測試）
+Ad Hoc Test（隨機測試）
+
 
 ### Server-Sent Events (SSE)
 是一種伺服器推送技術，它允許客戶端透過 HTTP 連接自動接收來自伺服器的更新。 SSE 描述了伺服器如何在建立初始客戶端連線後向客戶端發起資料傳輸。
@@ -25,10 +44,18 @@
 
 [淺談 Server-Sent Events](https://blackbing.medium.com/%E6%B7%BA%E8%AB%87-server-sent-events-9c81ef21ca8e)
 
+SSE 的延伸：WebSocket
+
 
 ### useMemo
 
 `useMemo` is a React Hook that lets you cache the result of a calculation between re-renders.
+
+> 為什麼 React 會有這個問題?
+
+
+
+>React 如何 render ?
 
 ----
 ## 密碼學
@@ -48,6 +75,19 @@
 - 非對稱加密
 
 
+密碼學的延伸： Hashing 的過程有哪些 components 和他們為何被需要
+
+From input
+
+Algo 演算法
+?? 1
+?? 2
+...?? N
+To outpu
+
+
+<hr>
+
 ## 4/23
 
 > [aws_learnig.md](https://github.com/chickundersea/GClearnignotes/blob/main/aws_learnig.md) 同步更新
@@ -60,7 +100,17 @@ ref:<br>
 
 
 ### OLTP/OLAP
-TBC
+
+- **線上交易處理 (OLTP (Online Transactional Processing))**
+<br>
+這個詞中 Transactional 是非常重要的，代表的是說他的處理通常包含了讀以及寫，通常 OLTP 是指系統能夠處理大量的更新以及新增的查詢。 
+
+- **線上分析處理 (OLAP (Online Analytical Processing))**
+<br>
+一般的 OLAP 的系統可以讓數據聚合 (data aggregation) 以及批次處理 (Batch processing)，OLAP 大部分是用來做歷史資料的分析以及報告。
+
+
+[OLAP 和 OLTP 有什麼區別？](https://aws.amazon.com/tw/compare/the-difference-between-olap-and-oltp/)
 
 ###  Amazon DynamoDB GSI (全域次要索引)
 - **功能**：GSI 允許使用與基礎資料表（Base Table）不同的分割鍵（Partition Key）和排序鍵（Sort Key）來查詢資料。
@@ -68,7 +118,9 @@ TBC
 - **效能與限流**：GSI 有自己的讀寫容量單位（RCU/WCU）。如果 GSI 的寫入容量不足，會導致基礎資料表的寫入操作遭遇背壓（Throttling）限流。
 
 ### 基礎架構即程式碼 (IaC)
->what / how
+
+基礎架構即程式碼 (IaC, Infrastructure as Code) 是一種使用設定檔（定義檔）來管理和配置雲端或本地資源的自動化技術，而非手動操作實體硬體或 Web UI。這種方法能實現版本控制、自動化部署、一致性管理並顯著提高效率，是 DevOps 實踐的基礎，
+
 #### Why  
 ```md
 - 文件維護不易
@@ -94,7 +146,8 @@ IT 單位從虛擬機械到網域管理
 則可以使用一套工具
 應用於其他地方
 ```
-**情境題**
+
+**AWS IAM情境題**
 #### A account 裡的 X user 可以直接存取 B account 裡 S3 服務的 Y 資源嗎？ 在 S3 已經有 allow X user 且 X user allow put y 的情況下 ?
 
 A: 可以！因為是建立在雙方都 Allow 的前提下
@@ -125,8 +178,9 @@ ref:<br>
 ```txt
 - Aggregation:聚合
 - feasibility: 可行性
+- Transactional:  交易型 (指一連串的資料操作)
 ```
-
+<hr>
 
 ## 4/24
 
@@ -137,6 +191,7 @@ ref:<br>
 ARN = Amazon Resource Name
  >A unique identifier for components like Lambda functions, EC2 instances, or IAM roles, typically in the format 
  `arn:partition:service:region:account-id:resource`
+ <br>
  ex: `arn:aws:ec2:us-east-1:123456789012:instance/i-1234567890abcdef0`
 
 
@@ -207,8 +262,9 @@ module "iam_policy" {
 - 為什麼每個policy可以直接讀取？
 Ａ：Terraform 的機制讓同資料夾內的`.tf`檔自動被解析並整合在一起。執行得時候就會一起被讀取，不需要 import 或 require ，因此可透過命名將不同資源分開以方便維護。
 
-##### 資料流
+
 ```
+資料流
 variable.tf          定義輸入參數的型別與預設值
      ↓
 policy-regional-admin.tf   接收 var.xxx，建立 aws_iam_policy 資源
@@ -218,23 +274,27 @@ output.tf            讀取建立好的資源的 .arn，輸出給外層
 外層 module.iam_policy.regional_admin_arn
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### 英單
 ```txt
 - compilance:合規
-- 
 ```
 
+<hr>
 
+## 4/27
+
+> [aws_learnig.md](https://github.com/chickundersea/GClearnignotes/blob/main/aws_learnig.md) 同步更新 Route 53
+
+### 多重因素驗證機制
+- Time-based One Time Password (TOTP)
+- Fast Identity Online (FIDO)
+
+### SSOT 
+SSOT = > Single Source of Truth  (單一事實來源)
+<br>
+一個資訊或行為就只應該只能在同一個地方存取修改，其他地方可以透過參照（reference）的方式來使用。SSOT 的最大好處是，大家所獲得的資料永遠都是一樣的，因為我們都是參照同一個來源。
+
+### 英單
+```txt
+- compiler: 編譯器
+```

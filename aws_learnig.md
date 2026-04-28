@@ -240,6 +240,45 @@
 **實務筆記**
 - 
 
+#### Route 53
+**服務定位**
+- 用途：AWS 的託管 DNS 服務，負責將網域名稱解析成 IP 位址
+- 適合場景：自訂網域管理、流量路由、健康檢查、跨 Region 容錯
+
+**核心概念**
+- Hosted Zone：DNS 記錄的容器，對應一個網域（Public 或 Private）
+- Record Type：
+  - `A`：網域 → IPv4
+  - `AAAA`：網域 → IPv6
+  - `CNAME`：網域 → 另一個網域（不能用在 root domain）
+  - `Alias`：AWS 專屬，類似 CNAME 但可用於 root domain，指向 ELB / CloudFront / S3
+  - `MX`：郵件伺服器
+  - `TXT`：文字驗證（SPF、網域所有權驗證等）
+- Routing Policy（路由策略）：
+  - `Simple`：單純回傳一筆記錄
+  - `Weighted`：按比例分配流量（A: 70%, B: 30%）
+  - `Latency`：自動導向延遲最低的 Region
+  - `Failover`：主站健康檢查失敗時切換到備援
+  - `Geolocation`：依使用者地理位置路由
+  - `Geoproximity`：依地理位置 + 偏移量路由（需 Traffic Flow）
+  - `Multi-value Answer`：回傳多筆健康的記錄（非 Load Balancer 替代品）
+- Health Check：定期探測端點，不健康時自動從 DNS 回應中移除
+
+**常見操作**
+- 購買或移轉網域到 Route 53
+- 建立 Public Hosted Zone 並設定 A / Alias Record 指向 ALB 或 CloudFront
+- 設定 Failover Routing + Health Check 做跨 Region 容錯
+- 搭配 ACM 驗證 SSL 憑證（新增 CNAME 記錄完成 DNS 驗證）
+
+**限制與注意事項**
+- CNAME 不能用於 root domain（`example.com`），需改用 Alias Record
+- Alias Record 只能指向 AWS 資源，不收額外 DNS 查詢費用
+- Private Hosted Zone 只在綁定的 VPC 內生效
+- TTL 設太高會讓 DNS 變更生效慢，切換前建議先調低
+
+**實務筆記**
+- 
+
 #### CloudFront
 **服務定位**
 - 用途：
