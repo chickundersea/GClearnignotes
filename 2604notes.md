@@ -51,11 +51,34 @@ SSE 的延伸：WebSocket
 
 `useMemo` is a React Hook that lets you cache the result of a calculation between re-renders.
 
-> 為什麼 React 會有這個問題?
+```js
+const cachedValue = useMemo(() => computeExpensiveValue(a, b), [a, b])
+```
 
+**為什麼需要 useMemo？**
 
+React 每次 re-render 時，元件內的所有程式碼都會重新執行。
+若某個計算很昂貴（如大量過濾、排序），每次 render 都重算會浪費效能。
+`useMemo` 會快取上次的結果，只在依賴項改變時才重新計算。
 
->React 如何 render ?
+**React 如何 render？**
+
+1. 觸發條件：`setState` / `props 改變` / `Context 改變`
+2. React 重新執行整個元件函式（包含所有變數、函式宣告）
+3. 比對新舊 Virtual DOM（Reconciliation）
+4. 只更新真正變動的 DOM 節點
+
+→ 問題在步驟 2：**每次都重算 + 重新建立函式**，即使結果沒變
+
+**dependencies（依賴陣列）**
+- 依賴項改變 → 重新計算，回傳新值
+- 依賴項不變 → 直接回傳快取值，跳過計算
+- `[]` → 只算一次（mount 時）
+
+**常見使用場景**
+- 大量資料的過濾 / 排序
+- 根據 props 衍生出複雜的計算結果
+- 避免傳給子元件的物件/陣列每次都是新參考（搭配 `React.memo`）
 
 ----
 ## 密碼學
@@ -298,3 +321,35 @@ SSOT = > Single Source of Truth  (單一事實來源)
 ```txt
 - compiler: 編譯器
 ```
+## 4/28
+
+
+### useCallback
+
+`useCallback` is a React Hook that lets you cache a function definition between re-renders.
+
+```js
+const cachedFn = useCallback(fn, dependencies)
+```
+**為什麼需要 useCallback？**
+
+React 每次 re-render 時，函式都會被重新建立（新的記憶體位址）。
+當這個函式被當作 props 傳給子元件，子元件會認為 props 改變了，進而觸發不必要的 re-render。
+
+**useCallback vs useMemo**
+
+| | useCallback | useMemo |
+|---|---|---|
+| 快取的對象 | **函式本身** | **函式的回傳值** |
+| 使用場景 | 傳給子元件的 callback | 昂貴的計算結果 |
+| 等價寫法 | `useCallback(fn, deps)` | `useMemo(() => fn, deps)` |
+
+**dependencies（依賴陣列）**
+- 陣列內的值改變時，才會重新建立函式
+- 若為 `[]`，函式只在初次 render 建立一次
+- 若省略，每次 render 都會重建（等於沒用）
+
+**常見搭配場景**
+- 搭配 `React.memo` 的子元件，避免因父元件 re-render 導致子元件也 re-render
+- 作為 `useEffect` 的依賴項時，避免 effect 無限觸發
+
