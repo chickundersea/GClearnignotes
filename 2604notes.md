@@ -8,6 +8,7 @@
 - [4/23](#423) — 依賴注入 / OLTP OLAP / DynamoDB GSI / IaC / 跨帳號 S3 存取
 - [4/24](#424) — ARN / Terraform IAM Policy Module 解析
 - [4/27](#427) - 
+- [4/28](#428) - 
 
 ---
 
@@ -98,7 +99,7 @@ React 每次 re-render 時，元件內的所有程式碼都會重新執行。
 - 非對稱加密
 
 
-密碼學的延伸： Hashing 的過程有哪些 components 和他們為何被需要
+>密碼學的延伸： Hashing 的過程有哪些 components 和他們為何被需要
 
 From input
 
@@ -353,3 +354,67 @@ React 每次 re-render 時，函式都會被重新建立（新的記憶體位址
 - 搭配 `React.memo` 的子元件，避免因父元件 re-render 導致子元件也 re-render
 - 作為 `useEffect` 的依賴項時，避免 effect 無限觸發
 
+
+
+
+### 4/29
+
+### 尖叫的架構 (Screaming Architecture)
+是由 Robert C. Martin (Uncle Bob) 提出的概念，強調軟體架構應如房屋藍圖般，讓人一眼看出系統用途，而非框架類型。這代表系統結構應突顯業務邏輯與案例（如：「購物車」、「醫療」），而非僅僅顯示如「Controllers」、「Models」的技術細節。
+
+[[讓結構尖叫吧] — 複習 Clean Code 有感](https://medium.com/kuma%E8%80%81%E5%B8%AB%E7%9A%84%E8%BB%9F%E9%AB%94%E5%B7%A5%E7%A8%8B%E6%95%99%E5%AE%A4/%E8%AE%93%E7%B5%90%E6%A7%8B%E5%B0%96%E5%8F%AB%E5%90%A7-%E8%A4%87%E7%BF%92-clean-code-%E6%9C%89%E6%84%9F-f1d918e2a568)
+
+
+
+### MRR (Monthly Recurring Revenue, 每月經常性收入)
+
+`MRR = Σ（所有活躍訂閱的月費金額）`
+年繳訂閱需換算：年費 ÷ 12 = 每月貢獻的 MRR
+
+**MRR 的組成拆解**
+
+New MRR：本月新增客戶帶來的收入
+Expansion MRR：舊客戶升級方案增加的收入
+Contraction MRR：舊客戶降級減少的收入（負值）
+Churned MRR：流失客戶消失的收入（負值）
+
+`Net New MRR = New MRR + Expansion MRR - Contraction MRR - Churned MRR`
+
+
+### Parquet
+一種以行（colums）式儲存的資料格式。
+
+>### 行式儲存 vs 列式儲存
+>隨著數據分析的資料量不斷提升，儲存方式逐漸改變，傳統以資料列為導向（Row-oriented）的儲存方式逐漸顯現其未逮之處，因此以欄位為導向（Column-oriented，或稱 Columnar）的儲存方式應運而生。
+>##### 行式儲存 （Row-oriented）
+>- 傳統的關聯式資料庫（Relational Database Management System， RDMS）或者 CSV 等檔案格式，就是以資料列為導向的儲存方式
+>- 適合 Web-based system，APP 等相關資訊系統的應用，如果要取得特定 Id 的所有資料十分方便
+>##### 列式儲存 （Column-oriented）
+>- 進行資料分析時，一般不會以所有欄位的資料進行分析，僅會取需要的數個欄位進行分析，對 Columnar 的儲存方式來說，可以很方便地選取所需要的欄位
+
+#### 常見的資料儲存格式包含以下：
+- Comma Separated Value（CSV） 格式：寫入快速
+- JavaScript Object Notation（JSON） 格式：Web API 最常使用的格式、適於人類閱讀
+- Apache Parquet：能夠高效資料處理而創造的一種檔案格式，結構設計上考慮批次（Batch）載入、壓縮（Compression）儲存、平行運算等需求
+
+
+### SLA (Service Level Agreement) 服務水準協議
+
+服務水準協議 (SLA) 是概述供應商向客戶承諾的服務水準之外包和技術廠商合約。其概述正常執行時間、交付時間、回應時間和解決時間等指標。SLA 也提供未符合要求時的動作路線之詳細資訊，例如其他支援或定價折扣。SLA 一般由客戶和服務供應商達成協議，然而，同公司內的不同業務單位也可以相互制訂 SLA。
+
+一般來說，它會包含三大重點：
+
+- 服務範圍：到底會提供哪些服務
+- 衡量標準：用哪些指標來檢視服務表現
+- 追責方式：萬一服務沒達到標準，會怎麼處理
+
+
+
+
+### 英單
+```txt
+- Proration : 按比例計算
+- Churn : 流失率
+- 
+
+```
