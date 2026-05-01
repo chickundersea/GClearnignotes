@@ -245,7 +245,12 @@
 - 用途：AWS 的託管 DNS 服務，負責將網域名稱解析成 IP 位址
 - 適合場景：自訂網域管理、流量路由、健康檢查、跨 Region 容錯
 
+
 **核心概念**
+- 如果沒有解析DNS，網站要用IP位置來存取
+- 數字 53 來自 DNS 用的 TCP/UDP 就是Port 53
+
+WHAT?:
 - Hosted Zone：DNS 記錄的容器，對應一個網域（Public 或 Private）
 - Record Type：
   - `A`：網域 → IPv4
@@ -263,6 +268,14 @@
   - `Geoproximity`：依地理位置 + 偏移量路由（需 Traffic Flow）
   - `Multi-value Answer`：回傳多筆健康的記錄（非 Load Balancer 替代品）
 - Health Check：定期探測端點，不健康時自動從 DNS 回應中移除
+
+HOW?:
+- 如何達到 100%SLA 高可用性？ 透過Anycast 架構：同一IP分給多個不同地理位置的多個伺服器
+
+WHY? :
+如果服務多半架設在 AWS 上 透過Alias Record 追蹤 AWS 服務的位置就很方便
+並且有health check 和 routing policy 機制 
+
 
 **常見操作**
 - 購買或移轉網域到 Route 53

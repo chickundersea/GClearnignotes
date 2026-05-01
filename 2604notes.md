@@ -7,8 +7,10 @@
 - [4/22](#422) — SIT / UAT / Smoke Testing / SSE / useMemo / 密碼學
 - [4/23](#423) — 依賴注入 / OLTP OLAP / DynamoDB GSI / IaC / 跨帳號 S3 存取
 - [4/24](#424) — ARN / Terraform IAM Policy Module 解析
-- [4/27](#427) - 
-- [4/28](#428) - 
+- [4/27](#427) - 多重因素驗證 (TOTP/FIDO) / SSOT
+- [4/28](#428) - useCallback
+- [4/29](#429) - 尖叫架構 / MRR / Parquet / SLA / Cron
+- [4/30](#430) - DNS / CIDR / IPv4 & IPv6 / WRR / ORM / Guardrail / dig
 
 ---
 
@@ -117,7 +119,29 @@ To outpu
 > [aws_learnig.md](https://github.com/chickundersea/GClearnignotes/blob/main/aws_learnig.md) 同步更新
 
 ### 依賴注入 (Dependency Injection, DI)
-TBC
+
+一種設計模式，讓類別所需的依賴物件由「外部注入」，而非在內部自行 `new`，以達到鬆耦合的效果。
+
+```js
+// ❌ 緊耦合：內部直接建立依賴
+class UserService {
+  constructor() {
+    this.db = new MySQLDatabase() // 難以替換、測試困難
+  }
+}
+
+// ✅ 依賴注入：依賴由外部傳入
+class UserService {
+  constructor(db) {
+    this.db = db // 可傳入任何實作：MySQL、Mock、Postgres
+  }
+}
+```
+
+**優點**
+- 鬆耦合：元件不依賴具體實作
+- 易測試：可注入 Mock 物件進行單元測試
+- 可替換：切換實作不需修改使用方程式碼
 
 ref:<br>
 [消除你程式碼的臭味 Day 20- 依賴注入：鬆開那個耦合](https://ithelp.ithome.com.tw/m/articles/10385298)
@@ -322,8 +346,9 @@ SSOT = > Single Source of Truth  (單一事實來源)
 ```txt
 - compiler: 編譯器
 ```
-## 4/28
+<hr>
 
+## 4/28
 
 ### useCallback
 
@@ -353,11 +378,9 @@ React 每次 re-render 時，函式都會被重新建立（新的記憶體位址
 **常見搭配場景**
 - 搭配 `React.memo` 的子元件，避免因父元件 re-render 導致子元件也 re-render
 - 作為 `useEffect` 的依賴項時，避免 effect 無限觸發
+<hr>
 
-
-
-
-### 4/29
+## 4/29
 
 ### 尖叫的架構 (Screaming Architecture)
 是由 Robert C. Martin (Uncle Bob) 提出的概念，強調軟體架構應如房屋藍圖般，讓人一眼看出系統用途，而非框架類型。這代表系統結構應突顯業務邏輯與案例（如：「購物車」、「醫療」），而非僅僅顯示如「Controllers」、「Models」的技術細節。
@@ -411,15 +434,11 @@ Churned MRR：流失客戶消失的收入（負值）
 ### Cron Expression（Cron 表達式）
 是一種基於時間的排程語法，用字串定義自動化任務的執行頻率（如分、時、日、月、星期）
 
-
 <img src="./images/截圖 2026-04-29 晚上7.16.37.png" width="60%">
 
 <img src="./images/截圖 2026-04-29 晚上7.16.42.png" width="60%">
 
 [Crontab.guru](https://crontab.guru/#15_14_1_*_*)
-
-
-
 
 ### 英單
 ```txt
@@ -428,15 +447,107 @@ Churned MRR：流失客戶消失的收入（負值）
 - 
 
 ```
+<hr>
 
 ## 4/30
-
 
 
 ### DNS
 網域名稱系統 (DNS) 是一種分佈於全球的服務，也是人們使用網際網路的基礎方式。DNS 使用分層式名稱結構，而且層次結構中不同的級別會以句點 ( . ) 分隔。以 www.amazon.com 和 aws.amazon.com 這兩個網域名稱為例。在這兩個範例中，"com" 是頂層網域，而 "amazon" 是第二級網域。第二級網域下可以有任意數量的更低級別 (如 "www" 和 "aws")。電腦使用 DNS 層次結構將人類可讀的名稱 (如 www.amazon.com) 轉換為電腦用於互相連接的 IP 地址 (如 192.0.2.1)。
 
 ### 無類別域間路由 (CIDR)
-TBC
+CIDR（無類別域間路由，Classless Inter-Domain Routing）用於表示 IP 地址和位址遮罩的一種方式，可以使 IP 地址的分配更為靈活，更好地適應實際需求。簡單來說他是一個IP分配的表示，會表示一個子網區域的分配。可以讓你快速地了解網路中有多少可用的 IP 地址。
 
-### 加權輪詢均衡 (WRR) 
+
+- IPv4
+IPv4 是目前最常見的網際網路協定，在IETF(Internet Engineering Task Force)於1981年9月發布的 RFC 791 中被描述最初的目的是讓全球的電腦彼此連接。
+  它的地址由32位二進位數字組成，通常被分為4個「八位元組」或「位元組」，每個位元組由一個點分開，而每個位元組可以表示為0到255之間的數字。所以，IPv4地址的格式是：X.X.X.X，其中每個X都是0到255之間的數字。
+
+- IPv6
+上述提到，IPv4 用 32 位 來表示一個地址（像 192.168.1.1），最多可以支持約 43 億個 IP 地址。最初，這個數量看起來很大，因為當時的網路還沒有普及。
+  隨著網路和設備越來越多，尤其是像手機、物聯網設備的出現，IPv4 的地址已經漸漸不足。到了 1990 年代，就開始出現所謂的「IPv4 地址枯竭」問題，全球唯一的 IP 地址池(IANA)也快要用光了。為了解決這個問題，技術人員開始研發下一代的網路協定，也就是 IPv6。
+
+IPv6地址由128位二進位數字組成，通常被分為8組，每組是4個十六進位數字，組與組之間由冒號分開。這意味著每一組可以表示為0000到FFFF之間的數字。所以，IPv6地址的格式是：X:X:X:X:X:X:X:X，其中每個X都是0000到FFFF之間的數字。例如：3ffe:1900:fe21:4545:: (當 IPv6 地址裡有連續的「0」組，可以用 :: 來省略不寫)。
+
+### 加權輪詢均衡 (WRR)
+
+加權輪詢均衡（Weighted Round Robin, WRR）是一種負載均衡演算法，在基本 Round Robin 基礎上加入「權重（Weight）」概念，依照伺服器的處理能力分配不同比例的請求。
+
+| | Round Robin | Weighted Round Robin |
+|---|---|---|
+| 分配方式 | 依序輪流，每台各得一份 | 依權重比例分配 |
+| 適用場景 | 伺服器規格相同 | 伺服器規格不同 |
+
+**範例**
+Server A 權重 = 3，Server B 權重 = 1
+→ 每 4 個請求，A 接 3 個、B 接 1 個（A→A→A→B→A→A→A→B...）
+
+**常見應用**
+- AWS Route 53 加權路由（Weighted Routing Policy）
+- Nginx upstream weight 設定
+- 金絲雀發布（Canary Release）流量逐步切分
+
+### ORM (Object-Relational Mapping，對象關係對映)
+ >是一種將程式語言中的物件（Object）與資料庫中的關係型表格（Relational Table）對應起來的技術。
+
+換句話說，ORM 讓開發者可以用物件的方法來操作資料，而不需要直接撰寫 SQL。例如：
+
+- Python + Django ORM
+- Java + Hibernate
+- C# + Entity Framework
+- JavaScript + Sequelize
+透過 ORM，開發者可以在程式碼中像操作物件一樣操作資料庫，而 ORM 會自動轉換為 SQL 查詢，並執行相應的操作。
+
+[ORM 是什麼？ORM 的優缺點是什麼？](https://www.explainthis.io/zh-hant/swe/orm-intro)
+
+### GWS CLI
+
+GWS（Google Workspace）CLI 工具，讓管理員可透過指令列管理 Workspace 帳號、群組、權限等，常見工具為 **GAM（Google Apps Manager）**，為開源的 GWS 管理工具。
+
+```bash
+gam print users                                             # 列出所有使用者
+gam create user jane@corp.com firstname Jane lastname Lee   # 建立使用者
+gam update user jane@corp.com suspended true                # 停用帳號
+gam print groups                                            # 列出所有群組
+gam user jane@corp.com show delegates                       # 查看委派設定
+```
+
+### Guardrail 機制
+
+Guardrail（護欄）是一種策略規則機制，確保系統行為符合規範，可分為「預防型」（直接阻擋違規操作）或「偵測型」（偵測後回報）。
+
+**AWS Control Tower Guardrails**
+在 OU（組織單位）層級套用的治理規則：
+- **Preventive（預防型）**：透過 SCP（Service Control Policy）直接禁止不符規範的操作
+- **Detective（偵測型）**：透過 AWS Config Rules 偵測不符規範資源並回報
+
+**Amazon Bedrock Guardrails（AI 場景）**
+對生成式 AI 設定內容過濾，防止輸出有害內容：
+- Content Filter（內容過濾）
+- PII Masking（個資遮罩）
+- Topic Denial（主題封鎖）
+
+### dig 查 DNS
+
+`dig`（Domain Information Groper）是 Linux/macOS 的 DNS 查詢工具，可查詢指定網域的各類型 DNS Record。
+
+```bash
+dig example.com              # 查詢 A Record（預設）
+dig example.com MX           # 查詢 MX Record（郵件伺服器）
+dig example.com NS           # 查詢 NS Record（名稱伺服器）
+dig example.com TXT          # 查詢 TXT Record
+dig @8.8.8.8 example.com     # 指定用 Google DNS 查詢
+dig +short example.com       # 精簡輸出，只顯示結果
+dig +trace example.com       # 追蹤完整解析路徑（從 root 開始）
+```
+
+**輸出區段說明**
+- `QUESTION SECTION`：你查詢了什麼
+- `ANSWER SECTION`：DNS 回覆結果
+- `AUTHORITY SECTION`：負責回答的名稱伺服器
+- `ADDITIONAL SECTION`：附加資訊
+
+### 英單
+```txt
+- Delegation: 委託
+```
