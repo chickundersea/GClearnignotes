@@ -145,6 +145,7 @@ class UserService {
 
 ref:<br>
 [消除你程式碼的臭味 Day 20- 依賴注入：鬆開那個耦合](https://ithelp.ithome.com.tw/m/articles/10385298)
+[寫出好維護的程式碼 — 依賴注入 (Dependency Injection) 與控制反轉 (Inversion of Control)](https://www.explainthis.io/zh-hant/e-plus/blog/writing-maintainable-code-dependency-injection-inversion-control)
 
 
 ### OLTP/OLAP
@@ -499,6 +500,7 @@ Server A 權重 = 3，Server B 權重 = 1
 透過 ORM，開發者可以在程式碼中像操作物件一樣操作資料庫，而 ORM 會自動轉換為 SQL 查詢，並執行相應的操作。
 
 [ORM 是什麼？ORM 的優缺點是什麼？](https://www.explainthis.io/zh-hant/swe/orm-intro)
+[ORM（對象關係對映）：讓資料庫操作更簡單的工具](https://realnewbie.com/posts/orm-object-relational-mapping-making-database-operations-easier)
 
 ### GWS CLI
 
@@ -531,6 +533,14 @@ Guardrail（護欄）是一種策略規則機制，確保系統行為符合規�
 
 `dig`（Domain Information Groper）是 Linux/macOS 的 DNS 查詢工具，可查詢指定網域的各類型 DNS Record。
 
+這個工具廣泛用於：
+
+- 檢查網站 IP 是否正確設定（A 記錄）
+- 查公司信箱是否設好（MX 記錄）
+- 驗證網站憑證是否能正常發出（TXT 記錄）
+- 確認 CNAME、NS 等其他記錄的設定狀況
+- 對比不同地區的 DNS 查詢結果（如 Google DNS、Cloudflare DNS）
+
 ```bash
 dig example.com              # 查詢 A Record（預設）
 dig example.com MX           # 查詢 MX Record（郵件伺服器）
@@ -546,6 +556,10 @@ dig +trace example.com       # 追蹤完整解析路徑（從 root 開始）
 - `ANSWER SECTION`：DNS 回覆結果
 - `AUTHORITY SECTION`：負責回答的名稱伺服器
 - `ADDITIONAL SECTION`：附加資訊
+
+另一個快速查IP的指令： `nslookup`
+
+[用 dig 與 nslookup 查 DNS：網站除錯的實用工具教學](https://realnewbie.com/posts/using-dig-and-nslookup-for-dns-practical-tools-for-website-debugging#dig-%E5%92%8C-nslookup-%E5%B7%AE%E5%9C%A8%E5%93%AA%E8%A9%B2%E6%80%8E%E9%BA%BC%E9%81%B8%E6%93%87)
 
 ### 英單
 ```txt
