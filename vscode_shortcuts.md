@@ -39,9 +39,13 @@ console.log("複製這一行到下方");
 console.log("複製這一行到下方");
 console.log("複製這一行到下方");
 console.log("複製這一行到下方");
+console.log("複製這一行到下方");
+console.log("複製這一行到下方");
+console.log("複製這一行到下方");
+console.log("複製這一行到下方");
 ```
 
-### 練習 ⇧⌘K — 刪除整行
+# 練習 ⇧⌘K — 刪除整行
 刪除下面多餘的行，只留下 "保留這行"：
 
 ```
@@ -128,45 +132,45 @@ function calculateTotal(items) {
 - 買咖啡
 ```
 
-### 練習 ⌥⌘↑ / ⌥⌘↓ — 在上方/下方插入游標
+# 練習 ⌥⌘↑ / ⌥⌘↓ — 在上方/下方插入游標
 把游標放在第一行，連按 ⌥⌘↓ 在下方新增游標，然後同時編輯所有行：
 
 ```
-item1: value
-item2: value
-item3: value
-item4: value
-item5: value
+item1: same new value
+item2: same new value
+item3: same new value
+item4: same new value
+item5: same new value
 ```
 
-### 練習 ⌘D — 選取下一個相同的文字
+# 練習 ⌘D — 選取下一個相同的文字
 把游標放在第一個 "foo" 上，連續按 ⌘D 來逐一選取所有 "foo"，然後打字替換成 "bar"：
 
 ```
-const foo = 1;
-let result = foo + 10;
-console.log(foo);
-if (foo > 0) {
-    return foo;
+const bar = 1;
+let result = bar + 10;
+console.log(bar);
+if (bar > 0) {
+    return bar;
 }
 ```
 
-### 練習 ⇧⌘L — 選取所有相同的文字
-選取下面第一個 "TODO"，按 ⇧⌘L 一次選取所有 "TODO"，然後替換成 "DONE"：
+# 練習 ⇧⌘L — 選取所有相同的文字
+選取下面第一個 "DONE"，按 ⇧⌘L 一次選取所有 "DONE"，然後替換成 "DONE"：
 
 ```
-TODO: 完成登入功能
-TODO: 修復搜尋 bug
-TODO: 更新文件
-TODO: 新增測試
-TODO: 部署上線
+DONE: 完成登入功能
+DONE: 修復搜尋 bug
+DONE: 更新文件
+DONE: 新增測試
+DONE: 部署上線
 ```
 
 ### 練習 ⌘L — 選取整行
 按 ⌘L 選取當前行，連按可以擴展選取範圍：
 
 ```
-第一行：連按 ⌘L
+第一行：連按 ⌘L 
 第二行：會往下擴展
 第三行：一直擴展選取
 ```
@@ -179,16 +183,6 @@ const name = "Alice"
 const age = 30
 const city = "Taipei"
 const job = "Engineer"
-```
-
-### 練習 ⌘F2 — 選取所有相同的單字
-把游標放在任一個 "color" 上，按 ⌘F2 全選後改名為 "colour"：
-
-```
-let color = "red";
-function getColor() { return color; }
-element.style.color = color;
-console.log("Current color:", color);
 ```
 
 ---
@@ -210,10 +204,10 @@ Apple juice is refreshing.
 按 ⌥⌘F 把所有 "cat" 替換成 "dog"：
 
 ```
-The cat sat on the mat.
-My cat likes to play.
-A cat and a cat walked together.
-That cat is very cute.
+The dog sat on the mat.
+My dog likes to play.
+A dog and a dog walked together.
+That dog is very cute.
 ```
 
 ### 練習 ⌘D / ⌘K ⌘D — 逐一選取/跳過
@@ -266,32 +260,6 @@ log.warn("minor error detected");
 
 ## 6. 程式語言編輯 (Rich Languages Editing)
 
-### 練習 F12 — 跳到定義
-在下面的函式呼叫上按 F12 跳到定義（需要有語言支援）：
-
-```javascript
-function greet(name) {
-    return `Hello, ${name}!`;
-}
-
-const message = greet("World");
-console.log(message);
-```
-
-### 練習 ⌥F12 — 預覽定義
-在函式名稱上按 ⌥F12，會在小視窗中預覽定義而不跳轉。
-
-### 練習 F2 — 重新命名符號
-把游標放在下面的 "oldName" 上，按 F2 將其重新命名：
-
-```javascript
-function oldName(x, y) {
-    return x + y;
-}
-
-let result = oldName(3, 4);
-console.log(oldName(1, 2));
-```
 
 ### 練習 ⌘. — 快速修復
 在有波浪底線的程式碼上按 ⌘. 查看可用的快速修復建議。
@@ -303,7 +271,7 @@ console.log(oldName(1, 2));
 const obj={name:"test",value:42,items:[1,2,3],nested:{a:1,b:2}};function process(data){if(data.value>0){return data.items.map(i=>i*2)}else{return[]}}
 ```
 
-### 練習 ⇧⌘\ — 跳到對應的括號
+# 練習 ⇧⌘\ — 跳到對應的括號
 把游標放在下面的某個括號上，按 ⇧⌘\ 跳到對應的括號：
 
 ```javascript
@@ -335,7 +303,7 @@ function complex(data) {
 試試按 ⌘K P 複製這個檔案的路徑，再貼到下面：
 
 ```
-檔案路徑：（貼在這裡）
+檔案路徑：（貼在這裡）/Users/umacheng/Desktop/Daily_learnig/vscode_shortcuts.md
 ```
 
 ---
@@ -406,30 +374,24 @@ for (let i = 0; i < 10; i++) {
 
 ```javascript
 function calculate(a, b) {
-
-let temp = a + b;
-
-    console.log(temp);
-
-if (temp > 10) {
-temp = temp * 2;
-    console.log("doubled:", temp);
+    let ressult = a + b;
+        console.log(ressult);
+    if (ressult > 10) {
+        ressult = ressult * 2;
+            console.log("doubled:", ressult);
+        }
+    return ressult;
 }
-
-        return temp;
-}
-
-function validate(temp) {
-console.log("validating:", temp);
-    if (temp < 0) {
+function validate(ressult) {
+console.log("validating:", ressult);
+    if (ressult < 0) {
             return false;
     }
 return true;
 }
-
-let temp = calculate(5, 8);
-    console.log("final:", temp);
-validate(temp);
+let ressult = calculate(5, 8);
+    console.log("final:", ressult);
+validate(ressult);
 ```
 
 ---

@@ -5,7 +5,7 @@
 ## 目錄
 
 - [5/3](#503) — 
-- [5/4]() — 
+- [5/4](#504) — 
 - [5/5]() — 
 - [5/6]() - 
 - [5/7]() - 
@@ -27,14 +27,14 @@
 
 ### O11y 
 可觀測性(Observability)
-TBC
+從對系統外部輸出的資訊推斷系統內部狀態的能力
 
 
 
 ### code review standard
 TBC
-
-SOLID
+https://hackmd.io/@maxcian/guides-for-design-review-and-code-review
+SOLID https://hackmd.io/@maxcian/revisit-solid
 dry 
 kiss 
 
@@ -48,6 +48,24 @@ kiss
 ```
 - implement :實作
 ```
+
+
+
+## 5/04
+
+### 鴨子型別 (Duck typing)
+鴨子型別（Duck Typing）是動態程式語言（如 Python、Ruby）的一種設計風格，核心概念為「若看起來像鴨子、叫聲像鴨子，那他就是鴨子」。物件的有效語意取決於它目前擁有的「方法和屬性」集合，而非繼承自特定類別或實現特定介面。這種風格強化了程式碼的靈活性，通常用於實現運行時的多型效果。
+
+>「只要他叫聲像鴨子、走路像鴨子，那他就是鴨子」
+
+這樣的好處在於：
+
+- 靈活性：不必擔心物件的具體類型，僅依據他的方法和屬性決定，不依靠繼承或類的實現。
+- 易於理解：通常你只會關注可以做什麼，而非他是什麼，在大型專案中可以減少維護類型層次的複雜性。
+- 提高程式碼的重用性：可以讓有相同方法和屬性的物件共享程式碼
+
+[走路像鴨子、叫聲像鴨子，他就是鴨子？](https://www.explainthis.io/zh-hant/swe/python-tutorial/04)
+
 
 ### SQL cheatsheet
 
@@ -178,3 +196,24 @@ DELETE FROM tablename1;
 -- Remove the entire tablename1 table.
 DROP TABLE tablename1;
 ```
+
+[Tutorial Hell](https://www.linkedin.com/pulse/escaping-tutorial-hell-guide-progress-your-learning-journey-jatasra-dvdgf/)
+
+
+<hr>
+
+## 5/5
+
+### AWS lab
+
+錯題記錄：
+Q：What is the primary purpose of a Route table in Amazon VPC?
+
+A:
+
+| Option | Correct answer | My selection | Rationale |
+| --- | --- | --- | --- |
+|A. To control network traffic between subnets || Selected | While Route tables influence traffic flow, they don't directly control traffic between subnets. This is primarily managed through Network ACLs and Security Groups. |
+| B. To configure VPN connections ||| VPN connections are configured using Virtual Private Gateways and Customer Gateways, not through Route tables. |
+| C. To specify the allowed routes for outbound traffic leaving a subnet | Correct || A Route table in Amazon VPC is used to determine where network traffic from your subnet or gateway is directed. It specifies the allowed routes for outbound traffic leaving a subnet. While the route table manages outbound traffic, security groups on individual instances determine which inbound traffic is allowed. |
+| D. To manage IP addresses for EC2 instances ||| IP addresses for EC2 instances are managed through subnet configurations and DHCP options sets, not through Route tables.|

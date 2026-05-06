@@ -219,26 +219,30 @@
 
 #### VPC
 **服務定位**
-- 用途：
-- 適合場景：
+- 用途：在 AWS 雲端中建立一個隔離的虛擬網路環境，控制資源的網路流通
+- 適合場景：多層式應用（Web / App / DB 分層部署）、需要嚴格控管流量進出的系統、跨 AZ 高可用架構
 
 **核心概念**
-- Subnet：
-- Route Table：
-- Internet Gateway：
-- NAT Gateway：
-- NACL：
+- Subnet：VPC 內更小的虛擬網路單位，每個 Subnet 對應一個 AZ。分為 Public Subnet（路由表含 IGW 規則，可直接連外）與 Private Subnet（無直接對外路由，適合放資料庫等敏感資源）
+- Route Table：包含「目的地 IP」→「下一站位址」的路由規則表，指引流量走向。Subnet 類型本質上由 Route Table 決定，而非 AWS 內建設定
+- Internet Gateway（IGW）：VPC 對外連接網際網路的閘道，掛載後 Public Subnet 的資源才能直接與外網通訊
+- NAT Gateway：部署在 Public Subnet，作為 Private Subnet 資源對外連線的代理——讓私有資源可主動連外（如更新套件），但外部無法主動連入
+- NACL（Network ACL）：Subnet 層級的防火牆規則，規範何種請求可進出 Subnet；為 **stateless**（進出流量需個別設規則）；與 Security Group（EC2 層、stateful）形成雙層防護
 
 **常見操作**
-- 建立 VPC：
-- 切分公有/私有子網：
-- 設定路由：
+- 建立 VPC：設定 CIDR 範圍（如 `10.0.0.0/16`），建立隔離的虛擬網路環境
+- 切分公有/私有子網：建立 Public Subnet 並關聯含 `0.0.0.0/0 → IGW` 的 Route Table；Private Subnet 則只保留內部路由；跨 AZ 部署多組可達到 HA 異地備援
+- 設定路由：Public Subnet → Route Table 加 `0.0.0.0/0 → IGW`；Private Subnet 需對外時 → 加 `0.0.0.0/0 → NAT Gateway`
 
 **限制與注意事項**
-- 
+- Public IP 與 Route Table 獨立運作：路由表控制「能否主動連外」，Public IP 控制「外部能否主動連入」，雙向通訊需兩者同時配合
+- NACL 是 stateless，進出都要各自設規則（容易漏設回應規則）；Security Group 是 stateful，回應流量自動放行
+- NAT Gateway 本身需要部署在 Public Subnet 並具備 Elastic IP
 
 **實務筆記**
-- 
+- 私有資源連外流程：Private EC2 → Route Table → NAT Gateway → IGW → 網際網路
+- 命名建議：`subnet-public-a`、`subnet-private-db-b`，標示用途與所在 AZ，讓團隊一眼看懂架構
+- 跨 AZ 各建一組 Public + Private Subnet，是最常見的高可用基礎架構模式
 
 #### Route 53
 **服務定位**

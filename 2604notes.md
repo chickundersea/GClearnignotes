@@ -89,28 +89,67 @@ React 每次 re-render 時，元件內的所有程式碼都會重新執行。
 ### Hash （雜湊）
 「單方面的將數據轉換成亂碼（或稱為 Hash Value，雜湊值）」，並且這個 Hash Value，他是「不能夠」轉換回原始的字串的。
 
+##### 什麼是Hash Function
+Function就是有一組輸入然後會產生一組輸出，同樣的輸入會產生出同樣的輸出， 而hash function的輸出是固定長度的，不同的hash funtion，所產出長度都不同， 比如說md5為128個bits，sha256顧名思義為256個bits。
+
+輸出的結果跟輸入的資料相比起來，通常是小很多的， 所以輸出的結果會被稱為message digest，或是直接稱為hash value。
+
+**Hash function的特性**
+- Irreversibility 單向且不可逆的，資料經過雜湊之後，會變得完全認不出來，而且沒辦法從雜湊值推回原本的資料。
+- Collision Resistance 抗碰撞性，很難找到兩個不同的輸入產生相同的輸出
+
+##### 常見的雜湊函數
+- **SHA-1（Secure Hash Algorithm 1）**
+   
+   是一種設計於1993年的安全雜湊函數。雖然曾經廣泛應用於數字簽名、資料完整性校驗等領域，但由於存在碰撞風險，即不同輸入可能產生相同雜湊值，因此現在不再建議用於安全性要求較高的應用。近年來，許多安全專家和標準機構推薦使用更安全的雜湊函數，如SHA-256或SHA-3。
+
+- **SHA-2（Secure Hash Algorithm 2）**
+   
+   是一系列安全雜湊函數，包括SHA-224、SHA-256、SHA-384、SHA-512、SHA-512/224和SHA-512/256。它們分別生成224、256、384、512位的固定長度雜湊值。SHA-2 目前被視為相對安全且不易受到攻擊的雜湊演算法。相較於SHA-1，SHA-2 提供更大的雜湊位元，增強了防碰撞和安全性。
+
+- **SHA-3（Secure Hash Algorithm 3）**
+   
+   是美國國家標準技術研究所（NIST）於2015年發布的新一代安全雜湊函數。它使用搖晃（shake）構造，具有較高的靈活性，可生成不同位元數的雜湊值。SHA-3 的目標是提供一種安全且抗量子計算攻擊的雜湊算法。它包括SHAKE128、SHAKE256，以及固定長度的雜湊函數，如SHA3–224、SHA3–256、SHA3–384、SHA3–512等。SHA-3在各種應用中提供可靠的資料完整性和安全性。
+
+- **MD5（Message Digest Algorithm 5）**
+   
+   是一種常見的數據雜湊函數，產生128位元的固定長度雜湊值。由於MD5容易受到碰撞攻擊，不再建議用於安全應用。
+
+- **RIPEMD (RACE Integrity Primitives Evaluation Message Digest)**
+  
+  是一系列資料雜湊函數，包括 RIPEMD-128、RIPEMD-160、RIPEMD-256、和RIPEMD-320。由歐洲研究實驗室於1996年設計，主要用於資料完整性校驗和安全應用。RIPEMD-160 是最廣泛使用的版本，產生160位的雜湊值。然而，由於安全性考量，一些專家建議在新應用中使用更現代、安全的雜湊函數，如 SHA-256 或 SHA-3。
+
+
 ### Encode （編碼）
 「數據可以直接被編碼」，並且中間「不需要」任何的密鑰參與
+
+Encode 常見演算法 Base64：  可以encode/decode
+[Base64 Encode](https://emn178.github.io/online-tools/base64_encode.html)
+
+**所以編碼並不算加密
 
 ### Encrypt （加密）
 所謂的 Encrypt（加密），就是「將數據加密成密文」
 
 又可以再細分成兩種加密方式，分別是：
 
-- 對稱加密
-- 非對稱加密
+- 對稱加密：在對稱加密中，只會有「一把」密鑰存在，因此不論是加密還是解密，就統統是用這把密鑰來進行。
 
+- 非對稱加密：在非對稱加密中，則是會有「兩把」密鑰存在。其中一把會叫做「公鑰」（也就是 Public Key），另一把則叫做「私鑰」（也就是 Private Key）
+  - 公鑰（Public Key）：公開的，可以複製好幾份，廣發給所有人
+  - 私鑰（Private Key）：私有的，必須要好好的保護，不可以洩漏 
+  並且在非對稱加密中，有一個很神奇的運作邏輯，也就是：
+  - 由 「公鑰」 所加密的數據，只能夠由 「私鑰」 解密
+  - 由 「私鑰」 所加密的數據，只能夠由 「公鑰」 解密
 
->密碼學的延伸： Hashing 的過程有哪些 components 和他們為何被需要
-
-From input
-
+#### 演算法(Algorithm)
 Algo 演算法
 ?? 1
 ?? 2
 ...?? N
 To outpu
-
+[Hash 是什麼？一次搞懂 Hash Function 的原理、特性與應用](https://homuchen.com/posts/what-is-hash-function-its-properties-and-usages/)
+[]()
 
 <hr>
 
