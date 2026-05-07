@@ -20,13 +20,23 @@
 - 情境題
 
     - 兩個 EC2 位於同個 Private Subnet，如何設定才能做到「僅限這兩台彼此互通」？
-    A:
+    A:設定 一個 Security Group 互相引用。 EX: `sg-pair-only`
+        - Inbound 規則：僅允許來源為 `sg-pair-only` 自身的流量
+        - Outbound 規則：僅允許目的地為 `sg-pair-only` 自身的流量
+        - 到EC2上associated security groups 新增上`sg-pair-only`
 
     - Private EC2 需要下載更新（上外網），但必須禁止外網主動發起連線。
-    A:
+    A: 也就是 「出的去，進不來」 --> 用 `NAT Gateway`
+    - 先在 Public Subnet 建立 NAT Gateway，並分配一個 Elastic IP
+    - Private Subnet 的 Route Table 加一條： Destination 0.0.0.0/0   Target 到 `NAT Gateway`
 
     - Private EC2 在不經過 Internet 的情況下，如何安全地將 Log 傳送到 CloudWatch？
-    A:
+    A:使用 VPC Endpoint 走內部
+
+    - 在 VPC 中為 CloudWatch Logs 建立一個Interface Endpoint ，會 Private Subnet 中產生一個內網 IP（ENI）(要啟用Enable DNS name就能直接透過預設的 API 網址連線)
+    - 建立 Endpoint 的 Security Group Inbound ->允許來自 EC2 Security Group 的入站流量
+    - 建立 EC2 的 Security Group Outbound ->允許出站流量到 Endpoint Security Group 的 IP 範圍
+    - 設定 IAM Role 掛到 EC2  讓Ec2 有權限將 Log 寫入 CloudWatch
 
 
 <hr>

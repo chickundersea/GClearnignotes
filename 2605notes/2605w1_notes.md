@@ -217,3 +217,14 @@ A:
 | B. To configure VPN connections ||| VPN connections are configured using Virtual Private Gateways and Customer Gateways, not through Route tables. |
 | C. To specify the allowed routes for outbound traffic leaving a subnet | Correct || A Route table in Amazon VPC is used to determine where network traffic from your subnet or gateway is directed. It specifies the allowed routes for outbound traffic leaving a subnet. While the route table manages outbound traffic, security groups on individual instances determine which inbound traffic is allowed. |
 | D. To manage IP addresses for EC2 instances ||| IP addresses for EC2 instances are managed through subnet configurations and DHCP options sets, not through Route tables.|
+
+
+### AWS Glue
+AWS Glue 是一款無伺服器資料整合服務，旨在簡化並自動化 ETL（擷取、轉換、載入）流程，讓從多個來源發現、準備及合併數據以進行分析與機器學習變得容易。
+
+Why Use AWS Glue?
+- 無伺服器與完全管理：無需伺服器配置、管理或擴展。您只需支付作業執行時所使用的資源，從而降低營運複雜度與成本。
+- 自動資料發現（爬蟲）：膠水爬蟲掃描資料來源（如 S3、JDBC），自動推斷結構並填充中央膠水資料目錄，防止產生「資料沼澤」。
+- 簡易 ETL 開發：提供視覺化（Glue Studio）及程式碼化（Python/Scala）工具，快速建立 ETL 管線，並支援 AI 程式碼生成。
+- 無縫 AWS 整合：原生支援 AWS 服務，如 Amazon S3、Amazon Redshift、Amazon Athena 及 Amazon EMR。
+- 彈性資料處理引擎：支援 Apache Spark 進行大規模批次/串流，Ray 用於 Python 工作負載，Python Shell 用於較小的腳本任務。
