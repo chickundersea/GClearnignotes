@@ -43,6 +43,8 @@ kiss
 
 - [淺入淺出 Dependency Injection](https://medium.com/wenchin-rolls-around/%E6%B7%BA%E5%85%A5%E6%B7%BA%E5%87%BA-dependency-injection-ea672ba033ca)
 - [【問題分析與解決工具】第3篇：五個為什麼(5 Whys)分析法](https://medium.com/@lingchan2050/%E5%95%8F%E9%A1%8C%E5%88%86%E6%9E%90%E8%88%87%E8%A7%A3%E6%B1%BA%E5%B7%A5%E5%85%B7-%E7%AC%AC3%E7%AF%87-%E4%BA%94%E5%80%8B%E7%82%BA%E4%BB%80%E9%BA%BC-5-whys-%E5%88%86%E6%9E%90%E6%B3%95-6fe558f63161)
+- [[面試][設計模式]Code Review 會注意哪些事？會依照什麼原則對程式做 Refactoring？0](https://ithelp.ithome.com.tw/articles/10278207)
+
 
 ### 英單
 ```
@@ -197,6 +199,8 @@ DELETE FROM tablename1;
 DROP TABLE tablename1;
 ```
 
+
+> Notice!
 [Tutorial Hell](https://www.linkedin.com/pulse/escaping-tutorial-hell-guide-progress-your-learning-journey-jatasra-dvdgf/)
 
 
@@ -213,10 +217,10 @@ A:
 
 | Option | Correct answer | My selection | Rationale |
 | --- | --- | --- | --- |
-|A. To control network traffic between subnets || Selected | While Route tables influence traffic flow, they don't directly control traffic between subnets. This is primarily managed through Network ACLs and Security Groups. |
-| B. To configure VPN connections ||| VPN connections are configured using Virtual Private Gateways and Customer Gateways, not through Route tables. |
-| C. To specify the allowed routes for outbound traffic leaving a subnet | Correct || A Route table in Amazon VPC is used to determine where network traffic from your subnet or gateway is directed. It specifies the allowed routes for outbound traffic leaving a subnet. While the route table manages outbound traffic, security groups on individual instances determine which inbound traffic is allowed. |
-| D. To manage IP addresses for EC2 instances ||| IP addresses for EC2 instances are managed through subnet configurations and DHCP options sets, not through Route tables.|
+|A. To control network traffic between subnets || Selected | While Route tables influence traffiflow, they don't directly control traffic between subnets. This is primarily managed through NetworACLs and Security Groups. |
+| B. To configure VPN connections ||| VPN connections are configured using Virtual Private Gatewayand Customer Gateways, not through Route tables. |
+| C. To specify the allowed routes for outbound traffic leaving a subnet | Correct || A Route tablin Amazon VPC is used to determine where network traffic from your subnet or gateway is directed. Ispecifies the allowed routes for outbound traffic leaving a subnet. While the route table manageoutbound traffic, security groups on individual instances determine which inbound traffic iallowed. |
+| D. To manage IP addresses for EC2 instances ||| IP addresses for EC2 instances are managed througsubnet configurations and DHCP options sets, not through Route tables.|
 
 
 ### AWS Glue
@@ -228,3 +232,20 @@ Why Use AWS Glue?
 - 簡易 ETL 開發：提供視覺化（Glue Studio）及程式碼化（Python/Scala）工具，快速建立 ETL 管線，並支援 AI 程式碼生成。
 - 無縫 AWS 整合：原生支援 AWS 服務，如 Amazon S3、Amazon Redshift、Amazon Athena 及 Amazon EMR。
 - 彈性資料處理引擎：支援 Apache Spark 進行大規模批次/串流，Ray 用於 Python 工作負載，Python Shell 用於較小的腳本任務。
+
+
+## 5/6
+
+### AWS Step Functions
+**What is Step Function**
+AWS Step Functions是一種無伺服器的協調器，可以透過視覺化的方式來建立及執行一連串的檢查點及應用程式(可以是Lambda或AWS Service)，簡化步驟型的應用開發複雜度。
+
+它透過狀態機 (State Machine) 概念，以 JSON 格式的 Amazon States Language (ASL) 定義執行步驟，無需自行管理故障、重試機制或服務間的並行邏輯。
+
+
+- **視覺化工作流程：** 在 AWS 管理主控台中，Step Functions 能自動繪製流程圖，直觀顯示任務順序、狀態切換、成功與失敗路徑。
+- **狀態機器 (State Machine)：** 應用程式由一連串的「狀態」組成，包括任務 (Task)、選擇 (Choice)、等待 (Wait)、並行 - (Parallel) 等，可將複雜的應用程序邏輯拆分為簡單的步驟。
+- **無伺服器整合：** 深度整合 AWS 服務，例如：觸發一個 AWS Lambda 函數進行資料處理，根據結果利用 Amazon SNS 發送通知，完全- 不用配置伺服器。
+- **高可靠性與自動化：** 自動處理錯誤與重試機制。若任務失敗，Step Functions 可執行自定義的錯誤處理路徑，確保應用程式健壯。
+
+
