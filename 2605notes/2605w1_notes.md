@@ -4,11 +4,11 @@
 
 ## 目錄
 
-- [5/3](#503) — 
-- [5/4](#504) — 
-- [5/5]() — 
-- [5/6]() - 
-- [5/7]() - 
+- [5/3](#503) — 微服務、O11y、Code Review Standard
+- [5/4](#504) — 鴨子型別、SQL cheatsheet
+- [5/5](#55) — AWS lab（Route Table）、AWS Glue
+- [5/6](#56) — AWS Step Functions
+- [5/7](#57) — SOLID 原則、DRY、KISS
 ---
 
 ## 5/03
@@ -31,12 +31,44 @@
 
 
 
-### code review standard
-TBC
-https://hackmd.io/@maxcian/guides-for-design-review-and-code-review
-SOLID https://hackmd.io/@maxcian/revisit-solid
-dry 
-kiss 
+### Code Review Standard
+
+Code Review 的核心目標是確保程式碼品質、知識共享、及早發現缺陷。Review 時常見的檢查面向：
+
+**可讀性與命名**
+- 變數/函式命名是否清楚表達意圖（self-documenting）
+- 是否有不必要的註解（好的程式碼本身就是文件）
+- 函式長度是否合理（單一職責）
+
+**設計原則**
+
+#### SOLID 原則
+| 原則 | 全名 | 說明 |
+|---|---|---|
+| S | Single Responsibility | 一個類別只負責一件事，只有一個改變的理由 |
+| O | Open/Closed | 對擴展開放，對修改封閉（用抽象/介面擴展功能，不改既有程式碼）|
+| L | Liskov Substitution | 子類別必須能替換父類別而不破壞程式行為 |
+| I | Interface Segregation | 不應強迫實作用不到的介面方法，介面要小而專注 |
+| D | Dependency Inversion | 高層模組不依賴低層模組，兩者都依賴抽象（介面）|
+
+[Revisit SOLID](https://hackmd.io/@maxcian/revisit-solid)
+
+#### DRY（Don't Repeat Yourself）
+- 避免重複邏輯散落在多處，抽取共用函式或模組
+- 注意：過度 DRY 反而會造成不必要的耦合，需要判斷重複是「巧合」還是「本質相同」
+
+#### KISS（Keep It Simple, Stupid）
+- 用最簡單的方式解決問題，避免過度設計（over-engineering）
+- 如果一段程式碼需要大量註解才能理解，通常代表它太複雜了
+
+**其他 Review 重點**
+- 錯誤處理是否完善（edge case、null check）
+- 是否有潛在的效能問題（N+1 query、不必要的迴圈）
+- 安全性（SQL injection、XSS、敏感資訊外洩）
+- 測試覆蓋率是否足夠
+
+[Code Review 會注意哪些事？](https://ithelp.ithome.com.tw/articles/10278207)
+[Guides for Design Review and Code Review](https://hackmd.io/@maxcian/guides-for-design-review-and-code-review)
 
 ### 文章閱讀
 - [什麼是 POC（Proof of Concept）？軟體銷售中的概念驗證完整指南](https://realnewbie.com/posts/what-is-poc-proof-of-concept-complete-guide-to-concept-validation-in-software-sales)
@@ -244,8 +276,125 @@ AWS Step Functions是一種無伺服器的協調器，可以透過視覺化的�
 
 
 - **視覺化工作流程：** 在 AWS 管理主控台中，Step Functions 能自動繪製流程圖，直觀顯示任務順序、狀態切換、成功與失敗路徑。
-- **狀態機器 (State Machine)：** 應用程式由一連串的「狀態」組成，包括任務 (Task)、選擇 (Choice)、等待 (Wait)、並行 - (Parallel) 等，可將複雜的應用程序邏輯拆分為簡單的步驟。
-- **無伺服器整合：** 深度整合 AWS 服務，例如：觸發一個 AWS Lambda 函數進行資料處理，根據結果利用 Amazon SNS 發送通知，完全- 不用配置伺服器。
+- **狀態機器 (State Machine)：** 應用程式由一連串的「狀態」組成，包括任務 (Task)、選擇 (Choice)、等待 (Wait)、並行 (Parallel) 等，可將複雜的應用程序邏輯拆分為簡單的步驟。
+- **無伺服器整合：** 深度整合 AWS 服務，例如：觸發一個 AWS Lambda 函數進行資料處理，根據結果利用 Amazon SNS 發送通知，完全不用配置伺服器。
 - **高可靠性與自動化：** 自動處理錯誤與重試機制。若任務失敗，Step Functions 可執行自定義的錯誤處理路徑，確保應用程式健壯。
+
+<hr>
+
+## 5/7
+
+### SOLID 原則深入理解
+
+SOLID 是物件導向設計的五大原則，目的是讓程式碼更容易維護、擴展和測試。
+
+#### S — Single Responsibility Principle（單一職責原則）
+
+一個類別應該只有一個改變的理由。
+
+```python
+# Bad: 一個類別做太多事
+class UserService:
+    def create_user(self, data):
+        # 建立使用者
+        pass
+    def send_email(self, user):
+        # 寄信
+        pass
+    def generate_report(self, user):
+        # 產報表
+        pass
+
+# Good: 各司其職
+class UserService:
+    def create_user(self, data):
+        pass
+
+class EmailService:
+    def send_email(self, user):
+        pass
+
+class ReportService:
+    def generate_report(self, user):
+        pass
+```
+
+#### O — Open/Closed Principle（開放封閉原則）
+
+對擴展開放，對修改封閉。新增功能時不應修改既有程式碼，而是透過擴展（繼承、介面）來實現。
+
+```python
+# Bad: 每新增一種折扣就要改這個函式
+def calculate_discount(order_type, amount):
+    if order_type == "vip":
+        return amount * 0.8
+    elif order_type == "student":
+        return amount * 0.9
+
+# Good: 用多型擴展
+class DiscountStrategy:
+    def calculate(self, amount):
+        raise NotImplementedError
+
+class VIPDiscount(DiscountStrategy):
+    def calculate(self, amount):
+        return amount * 0.8
+
+class StudentDiscount(DiscountStrategy):
+    def calculate(self, amount):
+        return amount * 0.9
+```
+
+#### D — Dependency Inversion Principle（依賴反轉原則）
+
+高層模組不應依賴低層模組，兩者都應依賴抽象。這也是 Dependency Injection（依賴注入）的理論基礎。
+
+```python
+# Bad: 直接依賴具體實作
+class OrderService:
+    def __init__(self):
+        self.db = MySQLDatabase()  # 綁死 MySQL
+
+# Good: 依賴抽象介面
+class OrderService:
+    def __init__(self, db: DatabaseInterface):
+        self.db = db  # 可以注入任何實作了 DatabaseInterface 的物件
+```
+
+### DRY vs WET
+
+| 原則 | 說明 |
+|---|---|
+| DRY (Don't Repeat Yourself) | 每一段知識在系統中只有一個明確的表示 |
+| WET (Write Everything Twice) | 有時候適度重複比過度抽象更好 |
+
+判斷是否該抽取共用：
+- 重複出現 3 次以上（Rule of Three）
+- 重複的邏輯是「本質相同」而非「巧合相似」
+- 抽取後不會造成不自然的耦合
+
+### KISS 與 YAGNI
+
+- **KISS（Keep It Simple, Stupid）**：用最簡單的方式解決當前問題
+- **YAGNI（You Aren't Gonna Need It）**：不要為了「未來可能需要」而提前設計
+
+```python
+# Bad: 過度設計，目前只需要一種通知方式
+class NotificationFactory:
+    def create(self, type, strategy, config, ...):
+        ...
+
+# Good: 先做最簡單的版本，需要時再重構
+def send_slack_notification(message):
+    slack_client.post(channel, message)
+```
+
+### 英單
+```
+- scalability: 可擴展性
+- coupling: 耦合（模組之間的依賴程度）
+- cohesion: 內聚（模組內部元素的相關程度）
+- idempotent: 冪等（重複執行結果相同）
+```
 
 
