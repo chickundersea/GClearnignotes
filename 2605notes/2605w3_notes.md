@@ -68,17 +68,73 @@ MDN [Using server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/
 [淺談 Server-Sent Events](https://blackbing.medium.com/%E6%B7%BA%E8%AB%87-server-sent-events-9c81ef21ca8e)
 
 
+<hr>
+
+## 5/19
 
 
-1.欄位做index ?  不用
-mcp services 共用小service 的restapi endpoint 
 
-service 內還 service 外  （service之間呼叫）
 
-clean architechure (DDD)
 
-- 業務邏輯 放usecase 
 
-- 檢查dependency 注入
+### 文章閱讀
 
-next-release 
+
+
+## 5/20
+
+### *args 與 **kwargs 
+
+*args = arguments 代表「位置引數」
+
+
+
+
+>**kwargs =  keyword arguments，代表「關鍵字引數」。它的功能是讓Function接收不定數量、且帶有「名稱 = 值」的參數，並自動將這些參數打包成一個 字典。
+>> 雙星號的作用：變數名稱前加上 ** 是解包（Unpacking）或打包字典的語法。
+
+
+```py
+def print_user_info(**kwargs):
+    # kwargs 會被轉換為字典
+    print(type(kwargs))  # 輸出: <class 'dict'>
+    
+    # 遍歷字典中的所有鍵值對
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+# 呼叫函式，傳入不固定數量的關鍵字參數
+print_user_info(name="小明", age=25, city="Taipei")
+
+```
+輸出結果：
+```
+<class 'dict'>
+name: 小明
+age: 25
+city: Taipei
+```
+
+- [Python *args and **kwargs](https://www.w3schools.com/python/python_args_kwargs.asp)
+- [Python *args 與 **kwargs 使用方式](https://medium.com/jimmy-wang/python-note-%E8%88%87-%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F-32c8f5eeb06e)
+
+
+
+
+
+ docker-up 失敗紀錄
+
+讓 Docker CLI 指向 Podman 的 socket：
+確認 socket 存在：
+```bash
+ls /Users/umacheng/.docker/run/docker.sock
+# 或
+ls /var/run/docker.sock
+```
+-> 只有`/var/run/docker.sock` 沒有 `/Users/umacheng/.docker/run/docker.sock`
+
+因為 Podman 的 Docker 相容 socket 路徑不同，可以建 symlink：
+```bash
+mkdir -p ~/.docker/run
+ln -sf $(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}') ~/.docker/run/docker.sock
+```
