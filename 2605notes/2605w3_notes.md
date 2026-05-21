@@ -120,9 +120,23 @@ city: Taipei
 
 
 
+## 5/21
+
+### grep 指令
+
+#### aws-vault   exec 跟 login  的差異
 
 
- docker-up 失敗紀錄
+
+
+
+### **always daubt everythings**
+
+
+
+
+
+###  docker-up 失敗紀錄
 
 讓 Docker CLI 指向 Podman 的 socket：
 確認 socket 存在：
@@ -131,10 +145,101 @@ ls /Users/umacheng/.docker/run/docker.sock
 # 或
 ls /var/run/docker.sock
 ```
--> 只有`/var/run/docker.sock` 沒有 `/Users/umacheng/.docker/run/docker.sock`
+-> 只有`/var/run/docker.sock` 
+，沒有`/Users/umacheng/.docker/run/docker.sock`
 
 因為 Podman 的 Docker 相容 socket 路徑不同，可以建 symlink：
 ```bash
 mkdir -p ~/.docker/run
 ln -sf $(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}') ~/.docker/run/docker.sock
 ```
+
+遇到 
+
+```bash
+Error response from daemon: getting graph driver info "d66544c0b8b1da9bde2c4f4214641d15715a23751c91aa7bc3b30c50074ab6f2": readlink /var/lib/containers/storage/overlay: invalid argument
+
+What's next:
+    Filter, search, and stream logs from all your Compose services
+    in one place with Docker Desktop's Logs view. docker-desktop://dashboard/logs
+make: *** [docker-up] Error 1
+```
+
+執行 
+```bash
+podman system reset
+```
+
+```zsh
+Error response from daemon: getting graph driver info "d66544c0b8b1da9bde2c4f4214641d15715a23751c91aa7bc3b30c50074ab6f2": readlink /var/lib/containers/storage/overlay: invalid argument
+
+What's next:
+    Filter, search, and stream logs from all your Compose services
+    in one place with Docker Desktop's Logs view. docker-desktop://dashboard/logs
+make: *** [docker-up] Error 1
+```
+
+reset完重跑 build 到一半 還是fail 
+
+> 考慮刪除machine 
+
+刪完重建
+>可以docker up 
+
+但遇到新問題
+migration-runner fail 缺少 alembic 這個套件
+
+>懷疑lfs 檔案沒有pull
+
+用 
+```
+ls -lh */**/*.tar.gz
+```
+看lfs檔案容量大小來判斷
+
+
+ 再次 `git lfs pull`
+
+ 發生 
+ ```zsh
+error transferring "b9754e708b92c21308abeac93d16de21c8bfcf745ba4a58066854c86cc3e7454": [1] Error downloading file: No downloadable version of the file was found
+
+Failed to fetch some objects from '[REDACTED-REPO]'
+ ```
+ 檔案拉取路徑還是指向git hub
+
+ 用 ` git config --local --list | grep -i lfs`
+ 確認 lfs 對應s3 的設定完整
+
+ #### 嚴重注意！！ ～～
+ 
+ ```
+ aws-vault exec <profile> 
+ ```
+ 登到shell
+ 用`aws s3 ls`確認可以看到s3的bucket 
+
+ `make docker-up` again 
+
+ >migration-runner 一樣error
+ 
+ 用
+  ```zsh
+   docker image ls | grep migration
+  ```
+看migration image 的容量 是否跟其他同事一致
+：
+>沒有，表示build 有問題
+
+重跑    `make docker-build`
+ 再用
+  ```
+  docker image ls | grep migration
+  ```
+看migration image 的容量 是否跟其他同事一致：
+>是
+
+`make docker-up ` again 
+
+#### **成功 !** 
+
