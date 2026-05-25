@@ -126,11 +126,22 @@ city: Taipei
 
 #### aws-vault   exec 跟 login  的差異
 
+`aws-vault exec`
+用途：在 terminal 裡執行 AWS CLI 指令
+- 把臨時憑證（Access Key / Secret / Session Token）注入到當前的 shell 環境變數
+- 讓你在 terminal 裡用 AWS CLI、Terraform 等工具操作 AWS
+- 憑證只存在那個 session，時間到就失效
+
+`aws-vault login`
+用途：用瀏覽器打開 AWS Console
+- 產生一個臨時的 sign-in URL，自動在瀏覽器開啟 AWS 管理介面
+- 讓你用那個 profile 的身份登入網頁版 Console
+- 不需要自己輸入帳密
 
 
 
 
-### **always daubt everythings**
+### **always daubt everything**
 
 
 
