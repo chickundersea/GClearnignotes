@@ -1,3 +1,15 @@
 .DS_Store
+*.log
+*.env
+.idea/
+.vscode/  
+
 
 self_learning/
+node_modules/
+dist/
+build/
+coverage/
+  
+
+  
