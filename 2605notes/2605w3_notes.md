@@ -4,11 +4,11 @@
 
 ## 目錄
 
-- [5/18](#518) —  
-- [5/19](#519) - 
-- [5/20](#520) - 
-- [5/21](#521) - 
-- [5/22](#522) - 
+- [5/18](#518) — Vertical/Horizontal Scaling、遙測訊號 SLO/SLI、EBS Quiz、Context Engineering
+- [5/19](#519) — 
+- [5/20](#520) — *args 與 **kwargs
+- [5/21](#521) — grep 指令、aws-vault exec vs login、 docker-up 失敗紀錄
+- [5/22](#522) — 
 
 ---
 
@@ -74,11 +74,7 @@ MDN [Using server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/
 
 
 
-
-
-
 ### 文章閱讀
-
 
 
 ## 5/20
@@ -124,6 +120,7 @@ city: Taipei
 
 ### grep 指令
 
+
 #### aws-vault   exec 跟 login  的差異
 
 `aws-vault exec`
@@ -137,8 +134,6 @@ city: Taipei
 - 產生一個臨時的 sign-in URL，自動在瀏覽器開啟 AWS 管理介面
 - 讓你用那個 profile 的身份登入網頁版 Console
 - 不需要自己輸入帳密
-
-
 
 
 ### **always daubt everything**
