@@ -72,6 +72,54 @@ MDN [Using server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/
 
 ## 5/19
 
+### python 繼承
+
+```js
+class Animal{
+    constructor(type){this.type = type}
+}
+
+const dog = new Animal("dog")
+consle.log(dog.type)
+
+:dog
+```
+
+```py
+class AAA(Exception):
+    def __init__(self, reason: str):
+        self.reason = reason
+        super().__init__(reason)
+
+class BBB(AAA):
+    def __init__(self, type: str):
+        self.type = type
+        super().__init__(f"Message has been aborted: {type}")
+
+class CCC(BBB):  # 👈 繼承 BBB
+    def __init__(self, code: int):
+        self.code = code
+        super().__init__(f"Error code: {code}")  
+
+
+try:
+    raise CCC(404)
+except CCC as e:
+    print(e.code)    # 404           ← CCC 自己的
+    print(e.type)    # "Error code: 404"  ← 從 BBB 繼承來的
+    print(e.reason)  # "Message has been aborted: Error code: 404"  ← 從 AAA 繼承來的
+    print(str(e))    # "Message has been aborted: Error code: 404"  ← 從 AAA 繼承來的
+    print(type(e))   # <class '__main__.CCC'>
+    print(isinstance(e, CCC)) #True
+    print(isinstance(e, BBB)) #True
+    print(isinstance(e, AAA)) #True
+    print(isinstance(e, Exception)) #True
+
+
+  __main__  -> 這個檔案的意思
+```
+
+
 
 
 ### 文章閱讀

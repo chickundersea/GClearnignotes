@@ -272,6 +272,9 @@ git commit -m "add model"
 
 - binary 檔案（如 `.pkl`, `.pth`, `.bin`, `.zip`）不適合 diff，應用 LFS 或直接用 S3/DVC 管理
 
+
+
+
 ---
 
 ### Terraform 核心概念
@@ -309,6 +312,110 @@ output "db_password" {
 }
 terraform output db_password   # 明確查詢才顯示
 ```
+
+### terraform input/output 
+
+**Input Variables（輸入變數）**
+
+讓 Terraform 設定可參數化，避免 hardcode，方便在不同環境重複使用。
+
+```hcl
+# variables.tf — 定義變數
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "environment" {
+  description = "Deployment environment"
+  type        = string
+  # 沒有 default → apply 時必須提供
+}
+
+variable "allowed_ports" {
+  description = "List of allowed ingress ports"
+  type        = list(number)
+  default     = [80, 443]
+}
+```
+
+傳入變數的方式（優先級由低到高）：
+1. `default` 值
+2. 環境變數：`export TF_VAR_instance_type="t3.large"`
+3. `terraform.tfvars` 或 `*.auto.tfvars` 檔案
+4. CLI flag：`terraform apply -var="instance_type=t3.large"`
+
+```hcl
+# terraform.tfvars — 給不同環境各一份
+instance_type = "t3.large"
+environment   = "production"
+```
+
+在資源中引用：
+```hcl
+resource "aws_instance" "web" {
+  instance_type = var.instance_type   # 用 var.<name> 引用
+  tags = {
+    Environment = var.environment
+  }
+}
+```
+
+---
+
+**Output Values（輸出值）**
+
+把資源建立後產生的值「匯出」，供其他 module 引用或人類查看。
+
+```hcl
+# outputs.tf
+output "instance_public_ip" {
+  description = "The public IP of the web server"
+  value       = aws_instance.web.public_ip
+}
+
+output "db_endpoint" {
+  description = "RDS endpoint"
+  value       = aws_db_instance.main.endpoint
+}
+
+output "db_password" {
+  value     = aws_db_instance.main.password
+  sensitive = true   # terraform output 不會直接顯示
+}
+```
+
+查看 output：
+```bash
+terraform output                    # 列出所有 output
+terraform output instance_public_ip # 查看特定值
+terraform output -json              # JSON 格式（適合 script 解析）
+```
+
+跨 module 引用 output：
+```hcl
+# 在 root module 中引用子 module 的 output
+module "vpc" {
+  source = "./modules/vpc"
+}
+
+resource "aws_instance" "web" {
+  subnet_id = module.vpc.public_subnet_id   # 引用 vpc module 的 output
+}
+```
+
+Input / Output 的關係：
+```
+Input (var) → Module → Output
+              │
+         建立資源，產生屬性值
+              │
+              ▼
+      其他 Module 可以用 module.<name>.<output> 引用
+```
+
+
 
 **race condition（競態條件）**
 - 多人同時執行 `terraform apply`，同時讀到相同的 state，各自計算 diff 後都去修改 AWS 資源 → 造成衝突
