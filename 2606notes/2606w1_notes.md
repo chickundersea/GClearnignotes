@@ -130,3 +130,34 @@ https://www.w3schools.com/python/python_generators.asp
 ### Python yield keyword
 
 https://www.w3schools.com/python/ref_keyword_yield.asp
+
+
+# 6/05
+
+
+### python basic 
+
+`print ()` ---> 用來換行
+
+也可以用 **\n**
+`print ('Blank line \nin the middle')`
+--->
+```shell
+Blank line
+in the middle 
+```
+
+```py
+sentence = 'The dog is named Sammy'
+print(sentence.upper()) --> THE DOG IS NAMES SAMMY # 全大寫
+print(sentence.lower()) --> the dog is named sammy # 全小寫
+print(sentence.capitalize()) --> The dog is named Sammy # 首字大寫
+print(sentence.count('a')) --> 2 # 算有幾個 a
+```
+
+
+
+### Kiro 
+
+Spec driven development
+加入專案要留意是否有 spec 文件 ， 應遵守優先改動文件後透過 task 開發
