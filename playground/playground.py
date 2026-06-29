@@ -10,4 +10,3 @@ x = myFunc()
 for z in x:
   print(z)
 
-

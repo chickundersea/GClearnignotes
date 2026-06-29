@@ -39,5 +39,21 @@ iloc 是 Python pandas 函式庫中，用於 基於整數索引（integer-positi
 
 ### git commit --allow-empty
 
+
+## 英單
 - Parsing
-- 
+
+
+
+
+
+
+-----
+
+## 6/18
+
+### Python 中的 sub()
+
+
+### Regex 
+### python  set 用法
