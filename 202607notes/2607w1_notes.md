@@ -132,7 +132,7 @@ from typing import Literal
 quota_type: Literal["conversation", "ai_summary"]
 ```
 對比三種寫法：
-
+ 
 ```
 # 1. 純 str — 什麼字串都收，沒有驗證
 quota_type: str = "conversation"
@@ -168,3 +168,35 @@ quota_type: QuotaType = QuotaType.CONVERSATION
 
 -  tailization
 -  
+
+
+## 7/2
+
+stack 
+
+error trace 
+
+
+
+### FreeableMemory 可用的隨機存取記憶體的數量。
+
+AWS RDS Cloudwatch 
+
+
+### InvocationClientErrors 因「發出請求端」的問題（例如語法錯誤、參數無效或權限不足）被系統拒絕時，這個錯誤計數就會增加。
+
+
+Application Inference Profile (AIP) │ 每個 agent 用不同的 inference profile，CloudWatch 可以按 profile 區分
+
+### 英單
+
+- Threshold 臨界值
+- 
+
+
+
+
+
+
+
+
