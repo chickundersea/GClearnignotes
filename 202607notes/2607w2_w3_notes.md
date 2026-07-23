@@ -62,4 +62,22 @@
 
 https://blog.fernvenue.com/zh/archives/sign-git-commits-with-ssh-keys/
 
-### 
+
+## 7/22
+
+### py deps
+
+#### cryptography
+**作用：**加密與解密核心底層套件。
+
+**主要用途：**提供各種標準密碼學演算法（如 AES、RSA、Elliptic Curves）與憑證處理功能。Python 許多涉及 HTTPS、JWT 簽章、SSH 密鑰處理的套件，底層都是依靠它。
+
+**情境：**用於系統安全認證，例如產製與驗證 RS256 JWT Token。
+
+#### Mako
+**作用：**超高速的 Python 模板引擎（Template Engine）。
+
+**主要用途：**來把 Python 變數動態渲染成文字檔（如 HTML、SQL、設定檔等）。
+
+**情境：**常用於 Alembic（Python 著名的 DB Migration 工具），當你要建立新的資料庫變更檔時，Alembic 底層就是用 Mako 來渲染產生 .py 遷移檔。
+
