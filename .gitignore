@@ -13,3 +13,6 @@ coverage/
 confluence_draftpost/ 
 
 secretnotes/  
+
+# pre-commit 敏感關鍵字清單（含明文關鍵字，不可進版控）
+.secret-keywords

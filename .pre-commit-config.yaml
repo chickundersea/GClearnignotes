@@ -1,0 +1,23 @@
+# pre-commit 設定：阻擋敏感關鍵字被 commit。
+#
+# 關鍵字清單放在 .secret-keywords（已 gitignore，不進版控），
+# 因此本設定檔不含任何關鍵字明文，可安心進版控。
+#
+# 安裝一次（換機器 / 重建 repo 後也要跑）：
+#   pre-commit install
+# 手動對全部檔案掃描：
+#   pre-commit run --all-files
+# 逃生口（慎用）：
+#   git commit --no-verify
+
+repos:
+  - repo: local
+    hooks:
+      - id: block-sensitive-keywords
+        name: block sensitive keywords
+        description: 讀 .secret-keywords 清單，偵測 staged 內容中的敏感關鍵字，命中即中止 commit。
+        entry: scripts/check-keywords.sh
+        language: script
+        types: [text]
+        # 排除清單檔與腳本自身，避免自我命中。
+        exclude: '^(\.secret-keywords|scripts/check-keywords\.sh)$'
